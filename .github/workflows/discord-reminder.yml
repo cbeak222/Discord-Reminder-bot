@@ -18,5 +18,5 @@ jobs:
       - name: Send reminder to Discord
         run: |
           curl -X POST -H "Content-Type: application/json" \
-          -d '{"content":"@everyone get ready for the siege in 5 minutes!!!","allowed_mentions":{"parse":["everyone"]}}' \
+          -d '{"content":"@everyone Get ready for the Siege in 5 minutes!!!","allowed_mentions":{"parse":["everyone"]}}' \
           "${{ secrets.DISCORD_WEBHOOK_URL }}"
