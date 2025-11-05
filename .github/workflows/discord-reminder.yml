@@ -2,14 +2,16 @@ name: Discord Siege Reminders
 
 on:
   schedule:
-    # 한국시간 05:50 (UTC로 20:50 전날)
-    - cron: '50 20 * * *'
-    # 한국시간 11:50 (UTC로 02:50)
-    - cron: '50 2 * * *'
-    # 한국시간 17:50 (UTC로 08:50)
-    - cron: '50 8 * * *'
-    # 한국시간 23:50 (UTC로 14:50)
-    - cron: '50 14 * * *'
+    - cron: '50 20 * * *'  # 05:50 JST
+    - cron: '50 2 * * *'   # 11:50 JST
+    - cron: '50 8 * * *'   # 17:50 JST
+    - cron: '50 14 * * *'  # 23:50 JST
+  workflow_dispatch:
+    inputs:
+      message:
+        description: '테스트/즉시 실행용 메시지'
+        required: false
+        default: '@everyone GET READY FOR THE SIEGE IN 5 MINUTES!!!'  # 바꾼 문구 여기에
 
 jobs:
   send_reminder:
@@ -17,6 +19,12 @@ jobs:
     steps:
       - name: Send reminder to Discord
         run: |
+          CONTENT="${{ github.event.inputs.message }}"
+          if [ -z "$CONTENT" ]; then
+            CONTENT='@everyone GET READY FOR THE SIEGE IN 5 MINUTES!!!'
+          fi
+          echo "Sending: $CONTENT"
           curl -X POST -H "Content-Type: application/json" \
-          -d '{"content":"@everyone Get ready for the Siege in 5 minutes!!!","allowed_mentions":{"parse":["everyone"]}}' \
+          -d "{\"content\":\"$CONTENT\",\"allowed_mentions\":{\"parse\":[\"everyone\"]}}" \
           "${{ secrets.DISCORD_WEBHOOK_URL }}"
+
