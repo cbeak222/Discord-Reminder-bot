@@ -1,0 +1,22 @@
+name: Discord Siege Reminders
+
+on:
+  schedule:
+    # 한국시간 05:50 (UTC로 20:50 전날)
+    - cron: '50 20 * * *'
+    # 한국시간 11:50 (UTC로 02:50)
+    - cron: '50 2 * * *'
+    # 한국시간 17:50 (UTC로 08:50)
+    - cron: '50 8 * * *'
+    # 한국시간 23:50 (UTC로 14:50)
+    - cron: '50 14 * * *'
+
+jobs:
+  send_reminder:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send reminder to Discord
+        run: |
+          curl -X POST -H "Content-Type: application/json" \
+          -d '{"content":"@everyone get ready for the siege in 5 minutes!!!","allowed_mentions":{"parse":["everyone"]}}' \
+          "${{ secrets.DISCORD_WEBHOOK_URL }}"
